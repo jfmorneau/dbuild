@@ -4,27 +4,11 @@
 # Either use the LOCAL_USER_ID if passed in at runtime or
 # fallback
 
-if [[ -z ${UID} ]] ; then
-    UID=1000
-fi
 
-if [[ -z ${GID} ]] ; then
-    GID=1000
-fi
+cd /root/go/src/github.com/codeskyblue/gohttpserver
 
-groupadd -g ${GID} jf
+/root/go/bin/gohttpserver --root=/root/os/images &
 
-useradd -d /home/jf -u ${UID} -g $GID -m jf
+webproc -c /root/env,/root/build /root/build &
 
-echo "Starting with UID:GID : ${UID}:${GID}"
-export HOME=/home/jf
-
-mkdir $HOME/.npm
-
-chown jf:jf $HOME
-chown jf:jf $HOME/git
-chown jf:jf $HOME/.npm
-
-cd $HOME/git/20-os
-
-exec /usr/local/bin/gosu jf "$@"
+bash

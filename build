@@ -1,0 +1,31 @@
+#!/bin/bash
+
+. /root/env
+
+cd /root/os/build
+
+if [[ ${CLEAN_ALL} == 1 ]] ; then
+    echo y | build clean
+else
+    if [[ ${CLEAN_TARGET} == 1 ]] ; then
+        echo y | build clean-target
+    fi
+    
+    if [[ ${CLEAN_BRIO} == 1 ]] ; then
+        echo y | build clean-brio
+    fi
+fi
+
+if [[ ${BUILD} == 1 ]] ; then
+
+    if [[ ${BUILD_UPDATE_PKG} == 1 ]] ; then
+        ARGS=yy
+    else
+        ARGS=yn
+    fi
+
+    echo ${ARGS} | build
+fi
+
+
+read
