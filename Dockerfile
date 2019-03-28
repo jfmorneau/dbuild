@@ -30,8 +30,11 @@ RUN apt-get -qy update && apt-get -y install \
 	libssl1.0-dev \
     pv \
 	npm \
-	golang-1.8 golang-1.8-go golang-1.8-go-shared-dev golang-1.8-src libgolang-1.8-std1 \
-
+	golang-1.8 \
+	golang-1.8-go \
+	golang-1.8-go-shared-dev \
+	golang-1.8-src \
+	libgolang-1.8-std1 \
 	jq
 
 RUN npm install -g bower
