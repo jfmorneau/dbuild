@@ -26,6 +26,3 @@ if [[ ${BUILD} == 1 ]] ; then
 
     echo ${ARGS} | build
 fi
-
-
-read
