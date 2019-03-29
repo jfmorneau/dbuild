@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /root/env
+. /root/bin/env
 
 cd /root/os/build
 
