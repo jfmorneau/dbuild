@@ -1,2 +1,14 @@
 #!/bin/bash
 
+docker run -ti -d --name dbuild \
+    -v dbuild_build:/home/jf/os/buildroot/build \
+    -v dbuild_ccache:/home/jf/ccache \
+    -v dbuild_images:/home/jf/os/images \
+    -v dbuild_os:/home/jf/os \
+    -v ~/.ssh:/home/jf/.ssh \
+    -v ~/.gitconfig:/home/jf/.gitconfig \
+    -p 6100:8000 \
+    -p 6180:8080 \
+    --restart=unless-stopped \
+    --entrypoint bash \
+    dbuild 

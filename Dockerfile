@@ -38,7 +38,7 @@ RUN apt-get -qy update && apt-get -y install \
 	golang-1.8-src \
 	libgolang-1.8-std1 \
 	jq \
-	net-tools 
+	net-tools tree
 
 # webproc release settings
 ENV WEBPROC_VERSION 0.2.2
@@ -52,26 +52,41 @@ RUN pip3 install browsepy remi pywebview
 
 RUN rm -rf /var/lib/apt/lists/*
 
-ENV GOPATH=/root/go
-
-ENV PATH="/root/bin:/root/go/bin:/usr/lib/go-1.8/bin/:${PATH}"
-
 # RUN go get -v github.com/codeskyblue/gohttpserver
 # RUN go install -v github.com/codeskyblue/gohttpserver
 
 EXPOSE 8000
 EXPOSE 8080
 
+RUN useradd -m -U -G sudo jf
 
-COPY build /root/bin/build
-COPY env /root/bin/env
-COPY entrypoint.sh /root/bin/entrypoint.sh
-COPY cmd.sh /root/bin/cmd.sh
+RUN echo "jf   ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-RUN chmod +x /root/bin/build /root/bin/env /root/bin/entrypoint.sh /root/bin/cmd.sh
 
-#ENTRYPOINT [ "/root/bin/entrypoint.sh" ]
+VOLUME /home/jf/
+VOLUME /home/jf/ccache
+VOLUME /home/jf/os
+VOLUME /home/jf/os/images
+VOLUME /home/jf/os/buildroot/build
 
-WORKDIR /root/
+RUN mkdir /home/jf/go
+RUN mkdir /home/jf/bin
 
-CMD ["/root/bin/cmd.sh"]
+COPY build /home/jf/bin/build
+COPY env /home/jf/bin/env
+COPY entrypoint.sh /home/jf/bin/entrypoint.sh
+COPY cmd.sh /home/jf/bin/cmd.sh
+
+ENV GOPATH=/home/jf/go
+ENV PATH="/home/jf/bin:/home/jf/go/bin:/usr/lib/go-1.8/bin/:${PATH}"
+
+RUN chmod +x /home/jf/bin/build /home/jf/bin/env /home/jf/bin/entrypoint.sh /home/jf/bin/cmd.sh
+
+RUN chown -R jf:jf /home/jf
+
+#ENTRYPOINT [ "/home/jf/bin/entrypoint.sh" ]
+USER jf
+
+WORKDIR /home/jf
+
+CMD ["bash", "-c", "/home/jf/bin/cmd.sh"]
